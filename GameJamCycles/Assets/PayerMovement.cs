@@ -8,7 +8,11 @@ public class PayerMovement : MonoBehaviour
     private SpriteRenderer sprite;
     private Animator anim;
     private float dirX = 0f;
+    [SerializeField] private float moveSpeed = 3f;
+    [SerializeField] private float jumpForce = 6f;
     
+    private enum MovementState { idle, running, jumping, falling };
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -21,11 +25,11 @@ public class PayerMovement : MonoBehaviour
     private void Update()
     {
         dirX = Input.GetAxisRaw("Horizontal");
-        rb.velocity = new Vector2(dirX * 3f, rb.velocity.y);
+        rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") && Mathf.Abs(rb.velocity.y) < 0.05f)
         {
-            rb.velocity = new Vector2(rb.velocity.x, 6f);
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
 
         UpdateAnimationState();
@@ -33,19 +37,33 @@ public class PayerMovement : MonoBehaviour
 
     private void UpdateAnimationState() 
     {
+        MovementState state;
+
         if (dirX > 0f)
         {
-            anim.SetBool("running", true);
+            state = MovementState.running;
             sprite.flipX = false;
         }
         else if (dirX < 0f)
         {
-            anim.SetBool("running", true);
+            state = MovementState.running;
             sprite.flipX = true;
         }
         else
         {
-            anim.SetBool("running", false);
+            state = MovementState.idle;
         }
+
+        if (rb.velocity.y > .1f)
+        {
+            state = MovementState.jumping;
+        }
+        else if (rb.velocity.y < -.1f)
+        {
+            state = MovementState.falling;
+        }
+
+        anim.SetInteger("state", (int)state);
     }
+
 }
