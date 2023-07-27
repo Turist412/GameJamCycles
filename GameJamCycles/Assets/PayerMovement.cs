@@ -5,8 +5,10 @@ using UnityEngine;
 public class PayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb; 
+    private BoxCollider2D coll;
     private SpriteRenderer sprite;
     private Animator anim;
+    [SerializeField] private LayerMask jumpbleGround;
     private float dirX = 0f;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float jumpForce = 6f;
@@ -18,6 +20,7 @@ public class PayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        coll = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
     }
 
@@ -27,7 +30,7 @@ public class PayerMovement : MonoBehaviour
         dirX = Input.GetAxisRaw("Horizontal");
         rb.velocity = new Vector2(dirX * moveSpeed, rb.velocity.y);
 
-        if (Input.GetButtonDown("Jump") && Mathf.Abs(rb.velocity.y) < 0.05f)
+        if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
@@ -66,4 +69,8 @@ public class PayerMovement : MonoBehaviour
         anim.SetInteger("state", (int)state);
     }
 
+    private bool IsGrounded()
+    {
+        return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, .1f, jumpbleGround);
+    }
 }
