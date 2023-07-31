@@ -7,22 +7,32 @@ public class Finish : MonoBehaviour
 {
     private bool levelCompleted = false;
 
-    // Start is called before the first frame update
-    private void Start()
+    // Update is called once per frame
+    void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.F) && levelCompleted)
+        {
+            LoadNextLevel();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name == "Player" && !levelCompleted)
+        if (collision.gameObject.CompareTag("Player") && !levelCompleted)
         {
             levelCompleted = true;
-            Invoke("CompleteLevel", 2f);
         }
     }
 
-    private void CompleteLevel()
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            levelCompleted = false;
+        }
+    }
+
+    private void LoadNextLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
