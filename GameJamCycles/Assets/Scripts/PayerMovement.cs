@@ -16,6 +16,9 @@ public class PayerMovement : MonoBehaviour
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private Rigidbody2D box;
     [SerializeField] private TilemapRenderer ground;
+    [SerializeField] private TilemapRenderer groundPast;
+    [SerializeField] private TilemapRenderer groundFuture;
+    private int currentTime = 0;    //-1 = paast, 0 == present, 1 = future
     private enum MovementState { idle, running, jumping, falling };
 
     // Start is called before the first frame update
@@ -39,7 +42,10 @@ public class PayerMovement : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.R)) { ChangeBoxBodyType(); }
         
-        if(Input.GetKeyDown(KeyCode.Q)) { ChangeTilemapLayer(); }
+        if(Input.GetKeyDown(KeyCode.Q)) { MoveFuture(); }
+
+        if (Input.GetKeyDown(KeyCode.E)) { MovePast(); }
+
         UpdateAnimationState();
 
     }
@@ -85,9 +91,44 @@ public class PayerMovement : MonoBehaviour
         Debug.Log("button R pressed");
     }
 
-    private void ChangeTilemapLayer()
+    private void MoveFuture()
     {
-        ground.sortingOrder = ground.sortingOrder == -1 ? 0 : -1;
+        if (currentTime == 0)
+        {
+            groundPast.sortingOrder = -1;
+            ground.sortingOrder = -1;
+            groundFuture.sortingOrder = 0;
+
+            currentTime = 1;
+        }
+        if (currentTime == -1)
+        {
+            groundPast.sortingOrder = -1;
+            ground.sortingOrder = 0;
+            groundFuture.sortingOrder = -1;
+
+            currentTime = 0;
+        }
+        
+        
+    }
+
+    private void MovePast()
+    {
+        if (currentTime == 0)
+        {
+            groundPast.sortingOrder = 0;
+            ground.sortingOrder = -1;
+            groundFuture.sortingOrder = -1;
+            currentTime = -1;
+        }
+        if (currentTime == 1)
+        {
+            groundPast.sortingOrder = -1;
+            ground.sortingOrder = 0;
+            groundFuture.sortingOrder = -1;
+            currentTime = 0; 
+        }
     }
 }
 
