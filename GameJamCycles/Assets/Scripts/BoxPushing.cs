@@ -22,5 +22,17 @@ public class BoxPushing : MonoBehaviour
             rb.AddForce(pushDirection.normalized * pushSpeed, ForceMode2D.Impulse);
         }
     }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            ChangeBoxBodyType();
+        }
+    }
+    private void ChangeBoxBodyType()
+    {
+        rb.bodyType = rb.bodyType == RigidbodyType2D.Dynamic ? RigidbodyType2D.Kinematic : RigidbodyType2D.Dynamic;
+        Debug.Log("button R pressed");
+    }
 
 }
