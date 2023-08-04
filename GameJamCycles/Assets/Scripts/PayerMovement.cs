@@ -14,10 +14,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private Transform rock;
+    [SerializeField] private SpriteRenderer pedestal;
     [SerializeField] private TilemapRenderer ground;
     [SerializeField] private TilemapRenderer groundPast;
     [SerializeField] private TilemapRenderer groundFuture;
+    [SerializeField] private Sprite pedestalNew;
     private int currentTime = 0;    //-1 = past, 0 = present, 1 = future
+    private bool canChangeTime = false;
+    private bool pickUpAllowed = false;
     private enum MovementState { idle, running, jumping, falling }; // idle = 0, running = 1, jumping = 2, falling = 3
     [SerializeField] private float TimeLapsTimeDelay = 1.5f;
     [SerializeField] private AudioSource jumpingSoundEffect;
@@ -69,6 +73,12 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
+        if(Input.GetKeyDown(KeyCode.R) && pickUpAllowed) 
+        {
+            canChangeTime = true;
+            pedestal.sprite = pedestalNew;
+        }
+
         UpdateAnimationState();
     }
 
@@ -100,14 +110,14 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.falling;
         }
 
-         if (Input.GetKeyDown(KeyCode.E) && IsGrounded())
+         if (Input.GetKeyDown(KeyCode.E) && IsGrounded() && canChangeTime == true)
         {
             StartCoroutine(DelayedMoveFuture());
             timelaps = true;
             ResetTimelapsAfterDelay();
         }
 
-        if (Input.GetKeyDown(KeyCode.Q) && IsGrounded())
+        if (Input.GetKeyDown(KeyCode.Q) && IsGrounded() && canChangeTime == true)
         {
             StartCoroutine(DelayedMovePast());
             timelaps = true;
@@ -244,5 +254,21 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpingSoundEffect.Play();
         }
+        
     }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Pedestal"))
+        {
+            pickUpAllowed = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Pedestal"))
+        {
+            pickUpAllowed = false;
+        }
+    }
+
 }
