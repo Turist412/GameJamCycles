@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     private float dirX = 0f;
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float jumpForce = 6f;
+    [SerializeField] private SpriteRenderer pedestal;
+    [SerializeField] private Sprite pedestalNew;
     [SerializeField] private Transform rock;
     [SerializeField] private SpriteRenderer rock_sr;
     [SerializeField] private Rigidbody2D rock_rb;
@@ -105,6 +107,12 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+        }
+
+        if(Input.GetKeyDown(KeyCode.R) && pickUpAllowed) 
+        {
+            canChangeTime = true;
+            pedestal.sprite = pedestalNew;
         }
 
         UpdateAnimationState();
@@ -345,11 +353,8 @@ public class PlayerMovement : MonoBehaviour
         }
         if (collision.gameObject.CompareTag("Wood"))
         {
-            if (transform.position.y > collision.transform.position.y + 0.9f)
-            {
                 woodenGround = true;
                 jumpingSoundEffectWood.Play();
-            }
         }
     }
 
@@ -363,6 +368,21 @@ public class PlayerMovement : MonoBehaviour
         {
             woodenGround = false;
         }
-    }  
+    } 
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Pedestal"))
+        {
+            pickUpAllowed = true;
+        }
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Pedestal"))
+        {
+            pickUpAllowed = false;
+        }
+    } 
 
 }
