@@ -18,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D rock_rb;
     [SerializeField] private Transform groundTransform;
     [SerializeField] private Transform bridgeTransform;
+    [SerializeField] private CompositeCollider2D bridgeCollider;
     [SerializeField] private TilemapRenderer bridge;
     [SerializeField] private TilemapRenderer background;
     [SerializeField] private TilemapRenderer backgroundPast;
@@ -29,6 +30,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float TimeLapsTimeDelay = 1.5f;
     [SerializeField] private AudioSource jumpingSoundEffect;
     [SerializeField] private AudioSource runningSoundEffect;
+    [SerializeField] private AudioSource jumpingSoundEffectWood;
+    [SerializeField] private AudioSource runningSoundEffectWood;
     private bool isMoving = false;
     private bool timelaps = false;
     private Coroutine timelapsCoroutine = null;
@@ -38,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     private bool pushing = false;
     [SerializeField] private Sprite rockNew;
     [SerializeField] private Sprite rockOld;
+    private bool woodenGround = false; 
 
 
 
@@ -67,16 +71,34 @@ public class PlayerMovement : MonoBehaviour
         // Play/Stop running sound based on the player's movement
         if (isMoving && IsGrounded())
         {
-            if (!runningSoundEffect.isPlaying)
+            if (woodenGround == false){
+                if (!runningSoundEffect.isPlaying)
+                {
+                    runningSoundEffect.Play();
+                }
+            }
+            else
             {
-                runningSoundEffect.Play();
+                if (!runningSoundEffectWood.isPlaying)
+                {
+                    runningSoundEffectWood.Play();
+                }
             }
         }
         else
-        {
-            if (runningSoundEffect.isPlaying)
+        {   
+            if (woodenGround == false){
+                if (runningSoundEffect.isPlaying)
+                {
+                    runningSoundEffect.Stop();
+                }
+            }
+            else
             {
-                runningSoundEffect.Stop();
+                if (!runningSoundEffectWood.isPlaying)
+                {
+                    runningSoundEffectWood.Stop();
+                }
             }
         }
 
@@ -164,6 +186,8 @@ public class PlayerMovement : MonoBehaviour
             background.sortingOrder = -1;
             backgroundFuture.sortingOrder = 0;
             bridge.sortingOrder = 2;
+
+            bridgeCollider.isTrigger = !bridgeCollider.isTrigger;
 
             currentTime = 1;
             Vector3 lightPosition = playerLight.position;
@@ -256,6 +280,8 @@ public class PlayerMovement : MonoBehaviour
             backgroundFuture.sortingOrder = -1;
             bridge.sortingOrder = -1;
 
+            bridgeCollider.isTrigger = !bridgeCollider.isTrigger;
+
             currentTime = 0;
 
             Vector3 lightPosition = playerLight.position;
@@ -317,6 +343,14 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpingSoundEffect.Play();
         }
+        if (collision.gameObject.CompareTag("Wood"))
+        {
+            if (transform.position.y > collision.transform.position.y + 0.9f)
+            {
+                woodenGround = true;
+                jumpingSoundEffectWood.Play();
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -324,6 +358,10 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.CompareTag("Rock"))
         {
                 pushing = false;
+        }
+        if (collision.gameObject.CompareTag("Wood"))
+        {
+            woodenGround = false;
         }
     }  
 
