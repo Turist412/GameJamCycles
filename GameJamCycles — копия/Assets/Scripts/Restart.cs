@@ -21,6 +21,9 @@ public class Restart : MonoBehaviour
 
             // Устанавливаем новую позицию игрока
             player.position = currentPosition;
+
+            // Выводим имя объекта, с которым столкнулись
+            Debug.Log("Столкновение с объектом: " + collision.gameObject.name);
         }
     } 
 }

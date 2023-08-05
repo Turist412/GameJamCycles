@@ -36,6 +36,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform finish;
     private bool isPushing = false;
     private bool pushing = false;
+    [SerializeField] private Sprite rockNew;
+    [SerializeField] private Sprite rockOld;
+
+
 
 
     
