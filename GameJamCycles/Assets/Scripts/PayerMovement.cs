@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform rock;
     [SerializeField] private Transform pedestalTransform;
     [SerializeField] private SpriteRenderer pedestal;
+    [SerializeField] private Transform groundTransform;
     [SerializeField] private TilemapRenderer ground;
     [SerializeField] private TilemapRenderer groundPast;
     [SerializeField] private TilemapRenderer groundFuture;
@@ -178,6 +179,10 @@ public class PlayerMovement : MonoBehaviour
             pedestalPosition.z = 1;
             pedestalTransform.position = pedestalPosition;
 
+            Vector3 groundPosition = groundTransform.position;
+            groundPosition.z = 1;
+            groundTransform.position = groundPosition;
+
         }
         if (currentTime == -1)
         {
@@ -201,6 +206,10 @@ public class PlayerMovement : MonoBehaviour
             Vector3 pedestalPosition = pedestalTransform.position;
             pedestalPosition.z = 0;
             pedestalTransform.position = pedestalPosition;
+
+            Vector3 groundPosition = groundTransform.position;
+            groundPosition.z = 0;
+            groundTransform.position = groundPosition;
         }
     }
 
@@ -229,6 +238,10 @@ public class PlayerMovement : MonoBehaviour
             pedestalPosition.z = 1;
             pedestalTransform.position = pedestalPosition;
 
+            Vector3 groundPosition = groundTransform.position;
+            groundPosition.z = 1;
+            groundTransform.position = groundPosition;
+
         }
         if (currentTime == 1)
         {
@@ -252,6 +265,10 @@ public class PlayerMovement : MonoBehaviour
             Vector3 pedestalPosition = pedestalTransform.position;
             pedestalPosition.z = 0;
             pedestalTransform.position = pedestalPosition;
+
+            Vector3 groundPosition = groundTransform.position;
+            groundPosition.z = 0;
+            groundTransform.position = groundPosition;
         }
     }
 
