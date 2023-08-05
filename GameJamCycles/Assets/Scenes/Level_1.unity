@@ -14406,6 +14406,7 @@ MonoBehaviour:
   moveSpeed: 3
   jumpForce: 7
   rock: {fileID: 1576487357}
+  rock_sr: {fileID: 1576487356}
   rock_rb: {fileID: 1576487355}
   pedestalTransform: {fileID: 155072708}
   pedestal: {fileID: 155072707}

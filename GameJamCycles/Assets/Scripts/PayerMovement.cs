@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private Transform rock;
+    [SerializeField] private SpriteRenderer rock_sr;
     [SerializeField] private Rigidbody2D rock_rb;
     [SerializeField] private Transform pedestalTransform;
     [SerializeField] private SpriteRenderer pedestal;
@@ -220,6 +221,8 @@ public class PlayerMovement : MonoBehaviour
             groundTransform.position = groundPosition;
 
             rock_rb.bodyType = RigidbodyType2D.Static;
+            rock_sr.sprite = rockOld;
+
 
         }
     }
@@ -254,6 +257,8 @@ public class PlayerMovement : MonoBehaviour
             groundTransform.position = groundPosition;
 
             rock_rb.bodyType = RigidbodyType2D.Dynamic;
+            rock_sr.sprite = rockNew;
+
 
         }
         if (currentTime == 1)
