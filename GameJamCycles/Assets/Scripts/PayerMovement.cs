@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private Transform rock;
+    [SerializeField] private Transform pedestalTransform;
     [SerializeField] private SpriteRenderer pedestal;
     [SerializeField] private TilemapRenderer ground;
     [SerializeField] private TilemapRenderer groundPast;
@@ -31,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
     private Coroutine timelapsCoroutine = null;
     [SerializeField] private Transform playerLight;
     [SerializeField] private Transform finish;
+    private bool isPushing = false;
 
     
 
@@ -161,6 +163,10 @@ public class PlayerMovement : MonoBehaviour
             finishPosition.z = 1;
             finish.position = finishPosition;
 
+            Vector3 pedestalPosition = pedestalTransform.position;
+            pedestalPosition.z = 1;
+            pedestalTransform.position = pedestalPosition;
+
         }
         if (currentTime == -1)
         {
@@ -180,6 +186,10 @@ public class PlayerMovement : MonoBehaviour
             Vector3 finishPosition = finish.position;
             finishPosition.z = 0;
             finish.position = finishPosition;
+
+            Vector3 pedestalPosition = pedestalTransform.position;
+            pedestalPosition.z = 0;
+            pedestalTransform.position = pedestalPosition;
         }
     }
 
@@ -203,6 +213,11 @@ public class PlayerMovement : MonoBehaviour
             Vector3 finishPosition = finish.position;
             finishPosition.z = 1;
             finish.position = finishPosition;
+
+            Vector3 pedestalPosition = pedestalTransform.position;
+            pedestalPosition.z = 1;
+            pedestalTransform.position = pedestalPosition;
+
         }
         if (currentTime == 1)
         {
@@ -222,6 +237,10 @@ public class PlayerMovement : MonoBehaviour
             Vector3 finishPosition = finish.position;
             finishPosition.z = 0;
             finish.position = finishPosition;
+
+            Vector3 pedestalPosition = pedestalTransform.position;
+            pedestalPosition.z = 0;
+            pedestalTransform.position = pedestalPosition;
         }
     }
 
@@ -244,7 +263,7 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator ResetTimelaps()
     {
-        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+        yield return new WaitForSeconds(TimeLapsTimeDelay); // Wait for 2 seconds
         timelaps = false;
     }
 
@@ -252,9 +271,20 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Rock"))
         {
+            if (transform.position.y > collision.transform.position.y + 0.9f)
+            {
             jumpingSoundEffect.Play();
+            }
+            else
+            {
+                if(IsGrounded())
+                { 
+                    isPushing = true;
+                    Debug.Log("Pushing");
+
+                }
+            }
         }
-        
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -270,5 +300,7 @@ public class PlayerMovement : MonoBehaviour
             pickUpAllowed = false;
         }
     }
+
+    
 
 }
