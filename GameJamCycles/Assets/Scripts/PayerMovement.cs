@@ -16,13 +16,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform rock;
     [SerializeField] private SpriteRenderer rock_sr;
     [SerializeField] private Rigidbody2D rock_rb;
-    [SerializeField] private Transform pedestalTransform;
-    [SerializeField] private SpriteRenderer pedestal;
     [SerializeField] private Transform groundTransform;
-    [SerializeField] private TilemapRenderer ground;
-    [SerializeField] private TilemapRenderer groundPast;
-    [SerializeField] private TilemapRenderer groundFuture;
-    [SerializeField] private Sprite pedestalNew;
+    [SerializeField] private Transform bridgeTransform;
+    [SerializeField] private TilemapRenderer bridge;
+    [SerializeField] private TilemapRenderer background;
+    [SerializeField] private TilemapRenderer backgroundPast;
+    [SerializeField] private TilemapRenderer backgroundFuture;
     private int currentTime = 0;    //-1 = past, 0 = present, 1 = future
     [SerializeField] private bool canChangeTime = false;
     private bool pickUpAllowed = false;
@@ -53,8 +52,7 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         coll = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
-
-
+        bridge.sortingOrder = -1;
     }
 
     // Update is called once per frame
@@ -85,11 +83,6 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetButtonDown("Jump") && IsGrounded())
         {
             rb.velocity = new Vector2(rb.velocity.x, jumpForce);
-        }
-        if(Input.GetKeyDown(KeyCode.R) && pickUpAllowed) 
-        {
-            canChangeTime = true;
-            pedestal.sprite = pedestalNew;
         }
 
         UpdateAnimationState();
@@ -167,9 +160,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (currentTime == 0)
         {
-            groundPast.sortingOrder = -1;
-            ground.sortingOrder = -1;
-            groundFuture.sortingOrder = 0;
+            backgroundPast.sortingOrder = -1;
+            background.sortingOrder = -1;
+            backgroundFuture.sortingOrder = 0;
+            bridge.sortingOrder = 2;
 
             currentTime = 1;
             Vector3 lightPosition = playerLight.position;
@@ -184,20 +178,22 @@ public class PlayerMovement : MonoBehaviour
             finishPosition.z = 1;
             finish.position = finishPosition;
 
-            Vector3 pedestalPosition = pedestalTransform.position;
-            pedestalPosition.z = 1;
-            pedestalTransform.position = pedestalPosition;
-
             Vector3 groundPosition = groundTransform.position;
             groundPosition.z = 1;
             groundTransform.position = groundPosition;
 
+            Vector3 bridgePosition = bridgeTransform.position;
+            bridgePosition.z = 1;
+            bridgeTransform.position = bridgePosition;
+
+            
+
         }
         if (currentTime == -1)
         {
-            groundPast.sortingOrder = -1;
-            ground.sortingOrder = 0;
-            groundFuture.sortingOrder = -1;
+            backgroundPast.sortingOrder = -1;
+            background.sortingOrder = 0;
+            backgroundFuture.sortingOrder = -1;
 
             currentTime = 0;
             Vector3 lightPosition = playerLight.position;
@@ -211,10 +207,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3 finishPosition = finish.position;
             finishPosition.z = 0;
             finish.position = finishPosition;
-
-            Vector3 pedestalPosition = pedestalTransform.position;
-            pedestalPosition.z = 0;
-            pedestalTransform.position = pedestalPosition;
 
             Vector3 groundPosition = groundTransform.position;
             groundPosition.z = 0;
@@ -231,9 +223,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (currentTime == 0)
         {
-            groundPast.sortingOrder = 0;
-            ground.sortingOrder = -1;
-            groundFuture.sortingOrder = -1;
+            backgroundPast.sortingOrder = 0;
+            background.sortingOrder = -1;
+            backgroundFuture.sortingOrder = -1;
             currentTime = -1;
 
             Vector3 lightPosition = playerLight.position;
@@ -248,10 +240,6 @@ public class PlayerMovement : MonoBehaviour
             finishPosition.z = 1;
             finish.position = finishPosition;
 
-            Vector3 pedestalPosition = pedestalTransform.position;
-            pedestalPosition.z = 1;
-            pedestalTransform.position = pedestalPosition;
-
             Vector3 groundPosition = groundTransform.position;
             groundPosition.z = 1;
             groundTransform.position = groundPosition;
@@ -263,9 +251,11 @@ public class PlayerMovement : MonoBehaviour
         }
         if (currentTime == 1)
         {
-            groundPast.sortingOrder = -1;
-            ground.sortingOrder = 0;
-            groundFuture.sortingOrder = -1;
+            backgroundPast.sortingOrder = -1;
+            background.sortingOrder = 0;
+            backgroundFuture.sortingOrder = -1;
+            bridge.sortingOrder = -1;
+
             currentTime = 0;
 
             Vector3 lightPosition = playerLight.position;
@@ -279,10 +269,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3 finishPosition = finish.position;
             finishPosition.z = 0;
             finish.position = finishPosition;
-
-            Vector3 pedestalPosition = pedestalTransform.position;
-            pedestalPosition.z = 0;
-            pedestalTransform.position = pedestalPosition;
 
             Vector3 groundPosition = groundTransform.position;
             groundPosition.z = 0;
@@ -339,23 +325,6 @@ public class PlayerMovement : MonoBehaviour
         {
                 pushing = false;
         }
-    }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Pedestal"))
-        {
-            pickUpAllowed = true;
-        }
-    }
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Pedestal"))
-        {
-            pickUpAllowed = false;
-        }
-    }
-
-    
+    }  
 
 }
