@@ -7,6 +7,7 @@ TagManager:
   - Pedestal
   - Ground
   - Rock
+  - Restart
   layers:
   - Default
   - TransparentFX

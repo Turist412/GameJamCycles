@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private TilemapRenderer groundFuture;
     [SerializeField] private Sprite pedestalNew;
     private int currentTime = 0;    //-1 = past, 0 = present, 1 = future
-    private bool canChangeTime = false;
+    [SerializeField] private bool canChangeTime = false;
     private bool pickUpAllowed = false;
     private enum MovementState { idle, running, jumping, falling }; // idle = 0, running = 1, jumping = 2, falling = 3
     [SerializeField] private float TimeLapsTimeDelay = 1.5f;
@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isPushing = false;
     private bool pushing = false;
 
+
     
 
 
@@ -47,6 +48,8 @@ public class PlayerMovement : MonoBehaviour
         anim = GetComponent<Animator>();
         coll = GetComponent<BoxCollider2D>();
         sprite = GetComponent<SpriteRenderer>();
+
+
     }
 
     // Update is called once per frame
