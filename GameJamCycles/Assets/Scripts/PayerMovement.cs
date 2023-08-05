@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float jumpForce = 6f;
     [SerializeField] private Transform rock;
+    [SerializeField] private Rigidbody2D rock_rb;
     [SerializeField] private Transform pedestalTransform;
     [SerializeField] private SpriteRenderer pedestal;
     [SerializeField] private Transform groundTransform;
@@ -210,6 +211,9 @@ public class PlayerMovement : MonoBehaviour
             Vector3 groundPosition = groundTransform.position;
             groundPosition.z = 0;
             groundTransform.position = groundPosition;
+
+            rock_rb.bodyType = RigidbodyType2D.Static;
+
         }
     }
 
@@ -241,6 +245,8 @@ public class PlayerMovement : MonoBehaviour
             Vector3 groundPosition = groundTransform.position;
             groundPosition.z = 1;
             groundTransform.position = groundPosition;
+
+            rock_rb.bodyType = RigidbodyType2D.Dynamic;
 
         }
         if (currentTime == 1)
@@ -276,8 +282,6 @@ public class PlayerMovement : MonoBehaviour
     {
         return Physics2D.BoxCast(coll.bounds.center, coll.bounds.size, 0f, Vector2.down, .1f, jumpableGround);
     }
-
-    //rock.bodyType = rock.bodyType == RigidbodyType2D.Dynamic ? RigidbodyType2D.Static : RigidbodyType2D.Dynamic;
 
     private void ResetTimelapsAfterDelay()
     {
