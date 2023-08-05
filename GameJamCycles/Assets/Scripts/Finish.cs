@@ -6,13 +6,20 @@ using UnityEngine.SceneManagement;
 public class Finish : MonoBehaviour
 {
     private bool levelCompleted = false;
+    private Animator anim;
+    [SerializeField] private float time = 2f;
+    void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
-    // Update is called once per frame
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.F) && levelCompleted)
         {
-            LoadNextLevel();
+            anim.SetBool("isFinished", true);
+            Invoke("LoadNextLevel", time);
         }
     }
 
