@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Transform playerLight;
     [SerializeField] private Transform finish;
     private bool isPushing = false;
+    private bool pushing = false;
 
     
 
@@ -112,7 +113,7 @@ public class PlayerMovement : MonoBehaviour
             state = MovementState.falling;
         }
 
-         if (Input.GetKeyDown(KeyCode.E) && IsGrounded() && canChangeTime == true)
+        if (Input.GetKeyDown(KeyCode.E) && IsGrounded() && canChangeTime == true)
         {
             StartCoroutine(DelayedMoveFuture());
             timelaps = true;
@@ -125,9 +126,19 @@ public class PlayerMovement : MonoBehaviour
             timelaps = true;
             ResetTimelapsAfterDelay();
         }
+        if(pushing == true)
+        {
+            isPushing = true;
+        }
+        else
+        {
+            isPushing = false;
+        }
+        
 
         anim.SetInteger("state", (int)state);
         anim.SetBool("timelaps", timelaps);
+        anim.SetBool("isPushing", pushing);
     }
 
     private IEnumerator DelayedMoveFuture()
@@ -279,13 +290,24 @@ public class PlayerMovement : MonoBehaviour
             {
                 if(IsGrounded())
                 { 
-                    isPushing = true;
-                    Debug.Log("Pushing");
-
+                    pushing = true;
                 }
             }
         }
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            jumpingSoundEffect.Play();
+        }
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Rock"))
+        {
+                pushing = false;
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Pedestal"))

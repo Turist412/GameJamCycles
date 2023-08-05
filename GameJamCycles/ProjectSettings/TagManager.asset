@@ -4,10 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - BoxMoveble
-  - Rock
   - Pedestal
   - Ground
+  - Rock
   layers:
   - Default
   - TransparentFX
@@ -16,7 +15,7 @@ TagManager:
   - Water
   - UI
   - Ground
-  - BackgroundItems
+  - 
   - 
   - 
   - 
@@ -43,13 +42,10 @@ TagManager:
   - 
   m_SortingLayers:
   - name: Background
-    uniqueID: 596713831
-    locked: 0
-  - name: BackgroundItems
-    uniqueID: 881319673
+    uniqueID: 3286247505
     locked: 0
   - name: Ground
-    uniqueID: 13999359
+    uniqueID: 2777221511
     locked: 0
   - name: Default
     uniqueID: 0
